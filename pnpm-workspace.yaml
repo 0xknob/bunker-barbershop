@@ -2,3 +2,9 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# Permite que pacotes com native bindings (esbuild, etc.) rodem seus
+# scripts de postinstall no momento do install. Sem isso, o pnpm 11
+# bloqueia por padrão e ferramentas tipo Vite/Drizzle não funcionam.
+allowBuilds:
+  esbuild: true

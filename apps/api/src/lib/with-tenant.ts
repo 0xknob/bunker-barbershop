@@ -17,7 +17,7 @@
 
 import { pool } from './db';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from './schema';
+import * as schema from '../db/schema';
 
 export async function withTenant<T>(
   tenantId: string,

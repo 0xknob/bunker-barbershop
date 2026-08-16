@@ -4,10 +4,15 @@
   "version": "0.2.0",
   "type": "module",
   "main": "./src/index.ts",
+  "exports": {
+    ".":      "./src/index.ts",
+    "./ability": "./src/ability.ts"
+  },
   "scripts": {
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "zod": "^4.0.0"
   },
   "devDependencies": {

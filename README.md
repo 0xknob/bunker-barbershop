@@ -1,4 +1,4 @@
-# 🪒 Barbearia Retro — SaaS de agendamento com UI Windows XP / BIOS
+# 🪒 BunkerBarbershop — SaaS de agendamento com UI Windows XP / BIOS
 
 > Uma barbearia com cara dos anos 2000, feita pra agendar em menos de 1 minuto.
 > Cliente escolhe serviço, barbeiro e horário. Dono vê a agenda do dia numa "janela XP".
@@ -84,7 +84,7 @@ src/
 ```bash
 # Pré-requisitos: Node 18+
 git clone <url>
-cd barbearia-retro
+cd bunker-barbershop
 npm install
 npm run dev
 ```

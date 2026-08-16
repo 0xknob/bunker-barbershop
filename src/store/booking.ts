@@ -45,7 +45,7 @@ export const useBookingStore = create<BookingState>()(
           .map((a) => a.time),
     }),
     {
-      name: 'barbearia-retro:bookings',
+      name: 'bunker-barbershop:bookings',
       version: 1,
     },
   ),

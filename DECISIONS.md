@@ -1,4 +1,4 @@
-# Histórico de decisões técnicas — Barbearia Retro
+# Histórico de decisões técnicas — BunkerBarbershop
 
 ## Stack escolhida
 - **Vite + React 19 + TS**: stack moderna, build rápido, type-safety em tempo de build.

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 // Linhas do POST — strings estáticas pra não vazar nada de runtime no bundle.
 // Cada tupla: [texto, delayMs-após-a-anterior].
 const POST_SEQUENCE: Array<[string, number]> = [
-  ['BARBEARIA-RETRO BIOS v1.0.0  (c) 2026, Senac Tech Edition', 0],
+  ['BUNKER-BARBERSHOP BIOS v1.0.0  (c) 2026, Senac Tech Edition', 0],
   ['Copyright (C) 1981-2026 The Barbeiro Project Authors.', 250],
   ['', 120],
   ['Award Modular BIOS v4.51PG, An Energy Star Ally', 220],
@@ -69,7 +69,7 @@ export function BIOSBootScreen({ onComplete }: BIOSBootScreenProps) {
     >
       {/* Header com nome do fabricante — vibe placa-mãe */}
       <div className="mb-4">
-        <div className="text-bios-bright text-[16px]">BARBEARIA-RETRO BIOS</div>
+        <div className="text-bios-bright text-[16px]">BUNKER-BARBERSHOP BIOS</div>
         <div className="text-bios-fg/70 text-[12px]">Setup Utility, Release 1.0.0</div>
       </div>
 

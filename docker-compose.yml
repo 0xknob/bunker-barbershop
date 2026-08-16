@@ -1,0 +1,25 @@
+# ──────────────────────────────────────────────────────────────
+#  Postgres local para desenvolvimento.
+#  Sobe com: docker compose up -d postgres
+#  Desce com: docker compose down
+#  Dados ficam em apps/api/pgdata/ (gitignored).
+# ──────────────────────────────────────────────────────────────
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: bunker-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bunker
+      POSTGRES_PASSWORD: bunker
+      POSTGRES_DB: bunker
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./apps/api/pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bunker"]
+      interval: 5s
+      timeout: 3s
+      retries: 5

@@ -6,6 +6,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
+import { authPlugin } from './plugins/auth';
 import { authRoutes } from './routes/auth';
 import { appointmentRoutes } from './routes/appointments';
 import { serviceRoutes } from './routes/services';
@@ -26,6 +27,10 @@ await app.register(cors, {
   origin: env.CORS_ORIGINS.split(',').map((o) => o.trim()),
   credentials: true,
 });
+
+// ── Plugin de auth (Better-Auth) ────────────────────────────
+// Monta rotas /api/auth/* e popula request.user em todas as requests
+await app.register(authPlugin);
 
 // ── Health check ─────────────────────────────────────────────
 app.get('/health', async () => ({

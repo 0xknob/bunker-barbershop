@@ -1,6 +1,8 @@
 // Shared types and Zod schemas entre front-end e back-end.
 // Este package garante que validação e tipos ficam em sincronia.
 
+export * from './ability';
+
 export const ROLES = ['OWNER', 'BARBER', 'CUSTOMER'] as const;
 export type Role = (typeof ROLES)[number];
 

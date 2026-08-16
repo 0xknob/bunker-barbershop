@@ -1,17 +1,17 @@
-// App raiz: controla a transição entre a tela de boot e o desktop.
-// Esse é o único lugar que precisa saber da máquina de estados de inicialização.
-import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { BIOSBootScreen } from './components/screens/BIOSBootScreen';
 import { Desktop } from './components/screens/Desktop';
+import { useAuth } from './auth/AuthProvider';
+import { useState } from 'react';
 
-type Phase = 'boot' | 'desktop';
+// App agora decide: BIOS Boot (uma vez) → se logado, Desktop; senão, redireciona pro login via rota
+export default function App({ children }: { children?: ReactNode }) {
+  const [phase, setPhase] = useState<'boot' | 'app'>('boot');
+  const { loading, user } = useAuth();
 
-export default function App() {
-  const [phase, setPhase] = useState<Phase>('boot');
+  if (phase === 'boot') return <BIOSBootScreen onComplete={() => setPhase('app')} />;
+  if (loading)         return null;
+  if (!user)           return null; // rotas públicas (/login) renderizam por fora
 
-  return phase === 'boot' ? (
-    <BIOSBootScreen onComplete={() => setPhase('desktop')} />
-  ) : (
-    <Desktop />
-  );
+  return <Desktop />;
 }

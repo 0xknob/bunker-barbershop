@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+        env:
+          # Vite build não precisa de DB, mas o build do API precisa de tipos
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+          JWT_SECRET:    ci-placeholder-jwt-secret-with-at-least-32-chars
+          CORS_ORIGINS:  http://localhost:5173

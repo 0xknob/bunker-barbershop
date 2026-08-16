@@ -1,9 +1,27 @@
-node_modules
-dist
-dist-ssr
-.vite
-*.local
+# ── Node ─────────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.next/
+
+# ── Logs / temporários ──────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
 .DS_Store
+
+# ── Env ──────────────────────────────────────────────────────
 .env
 .env.local
 .env.*.local
+
+# ── Editor ───────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ── Build output ─────────────────────────────────────────────
+.turbo/
+coverage/
+
+# ── Postgres local ───────────────────────────────────────────
+apps/api/pgdata/

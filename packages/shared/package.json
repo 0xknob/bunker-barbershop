@@ -1,0 +1,16 @@
+{
+  "name": "@bunker/shared",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}

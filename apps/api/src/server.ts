@@ -40,7 +40,7 @@ app.get('/health', async () => ({
 }));
 
 // ── Rotas de domínio ─────────────────────────────────────────
-await app.register(authRoutes,        { prefix: '/auth' });
+await app.register(authRoutes,        { prefix: '/api/auth' });
 await app.register(appointmentRoutes, { prefix: '/api/appointments' });
 await app.register(serviceRoutes,     { prefix: '/api/services' });
 await app.register(userRoutes,        { prefix: '/api/users' });

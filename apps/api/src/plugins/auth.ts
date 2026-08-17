@@ -51,11 +51,33 @@ export const authPlugin = fastifyPlugin(async (app: FastifyInstance) => {
 
     const session = await auth.api.getSession({ headers });
     if (session?.user) {
+      // Busca role + tenantId no nosso user_roles via whoami-style query.
+      // Falha silenciosa se não encontrar (default CUSTOMER).
+      let role: 'OWNER' | 'BARBER' | 'CUSTOMER' = 'CUSTOMER';
+      let tenantId = '';
+      try {
+        const { db } = await import('../db/client');
+        const { userRoles } = await import('../db/schema/user-roles');
+        const { eq, and } = await import('drizzle-orm');
+        const result = await db
+          .select({ role: userRoles.role, tenantId: userRoles.tenantId })
+          .from(userRoles)
+          .where(eq(userRoles.userId, session.user.id))
+          .limit(1);
+        if (result[0]) {
+          role = result[0].role as typeof role;
+          tenantId = result[0].tenantId;
+        }
+      } catch {
+        // user não tem role ainda (signup novo) — fica CUSTOMER default
+      }
+
       req.user = {
         id:       session.user.id,
         email:    session.user.email,
         name:     session.user.name,
-        tenantId: (session.user as { tenantId?: string }).tenantId ?? '',
+        tenantId,
+        role,
       };
     }
   });

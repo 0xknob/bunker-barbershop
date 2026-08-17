@@ -28,20 +28,36 @@ export async function userRoutes(app: FastifyInstance) {
   });
 
   // ── GET /api/users/staff — só OWNER ──────────────────────────
+  // Lista staff + roles do tenant. Como auth.users mora em BA (não no nosso
+  // schema), fazemos 2 queries: roles (nosso DB) + users do staff via BA.
   app.get('/staff', { preHandler: requireRole('OWNER') }, async (req, reply) => {
     if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
     return withTenant(req.user.tenantId, async (txDb) => {
-      // JOIN users + barbers (e futuro customer service)
-      return txDb
+      const roles = await txDb
         .select({
-          id:     schema.users.id,
-          name:   schema.users.name,
-          email:  schema.users.email,
-          role:   schema.userRoles.role,
+          userId:   schema.userRoles.userId,
+          tenantId: schema.userRoles.tenantId,
+          role:     schema.userRoles.role,
         })
-        .from(schema.users)
-        .innerJoin(schema.userRoles, eq(schema.userRoles.userId, schema.users.id))
+        .from(schema.userRoles)
         .where(eq(schema.userRoles.tenantId, req.user!.tenantId));
+
+      // Enriquece com nome/email via query direta no BA.user
+      const { auth } = await import('../lib/auth');
+      const { Pool } = await import('pg');
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const userIds = roles.map(r => r.userId);
+      if (userIds.length === 0) return [];
+      const result = await pool.query('SELECT id, name, email FROM "user" WHERE id = ANY($1)', [userIds]);
+      await pool.end();
+
+      const userMap = new Map(result.rows.map(u => [u.id, u]));
+      return roles.map(r => ({
+        id:    r.userId,
+        name:  userMap.get(r.userId)?.name ?? '—',
+        email: userMap.get(r.userId)?.email ?? '—',
+        role:  r.role,
+      }));
     });
   });
 }

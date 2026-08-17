@@ -12,6 +12,7 @@ import { appointmentRoutes } from './routes/appointments';
 import { serviceRoutes } from './routes/services';
 import { userRoutes } from './routes/users';
 import { barberRoutes } from './routes/barbers';
+import { barberDashboardRoutes } from './routes/barber-dashboard';
 import { productRoutes } from './routes/products';
 import { env } from './env';
 
@@ -46,7 +47,8 @@ await app.register(authRoutes,        { prefix: '/api/auth' });
 await app.register(appointmentRoutes, { prefix: '/api/appointments' });
 await app.register(serviceRoutes,     { prefix: '/api/services' });
 await app.register(userRoutes,        { prefix: '/api/users' });
-await app.register(barberRoutes,      { prefix: '/api/barbers' });
+await app.register(barberRoutes,           { prefix: '/api/barbers' });
+await app.register(barberDashboardRoutes,  { prefix: '/api/barbers' });
 await app.register(productRoutes,     { prefix: '/api/products' });
 
 // ── Start ────────────────────────────────────────────────────

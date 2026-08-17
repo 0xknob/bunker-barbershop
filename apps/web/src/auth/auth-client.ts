@@ -1,10 +1,9 @@
 // Cliente Better-Auth para o front-end.
-// Aponta para o backend via proxy do Vite (ver vite.config.ts).
-//
-// Docs: https://www.better-auth.com/docs/installation
+// Usa mesma origem do front (Vite faz proxy pra API em :3001 via vite.config.ts).
+// Assim cookies SameSite funcionam e evita CORS.
 
 import { createAuthClient } from 'better-auth/react';
 
 export const authClient = createAuthClient({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3001',
+  baseURL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173',
 });

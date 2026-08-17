@@ -31,10 +31,19 @@ export default {
       },
       boxShadow: {
         // Janela XP: borda branca em cima/esquerda, cinza embaixo/direita
-        xpRaised:
-          'inset 1px 1px 0 #ffffff, inset -1px -1px 0 #7a7a7a, 1px 1px 0 #ffffff, -1px -1px 0 #7a7a7a',
-        xpPressed:
-          'inset 1px 1px 0 #7a7a7a, inset -1px -1px 0 #ffffff',
+        // Tailwind v3: usamos array de strings separadas pra cada sombra
+        xpRaised: [
+          'inset 1px 1px 0 #ffffff',
+          'inset -1px -1px 0 #7a7a7a',
+          '1px 1px 0 #ffffff',
+          '-1px -1px 0 #7a7a7a',
+        ].join(', '),
+        xpPressed: [
+          'inset 1px 1px 0 #7a7a7a',
+          'inset -1px -1px 0 #ffffff',
+        ].join(', '),
+        // Single-shadow fallback pra casos simples
+        'xp-card': '2px 2px 0 #7a7a7a',
       },
     },
   },

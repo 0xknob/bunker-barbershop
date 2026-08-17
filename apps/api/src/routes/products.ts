@@ -209,7 +209,7 @@ export async function productRoutes(app: FastifyInstance) {
 // NOTA: em produção multi-tenant real, a rota pública recebe um tenantSlug
 // na URL e seta app.tenant_id antes da query.
 import { db } from '../db/client';
-import { schema as schemaModule } from '../db/schema';
+import * as schemaModule from '../db/schema';
 import { sql } from 'drizzle-orm';
 
 async function withTenantGlobal<T>(

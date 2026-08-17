@@ -1,9 +1,5 @@
-// Painel do Dono — vê tudo: agenda completa do dia, staff, faturamento.
-//
-// OWNER é o único que vê:
-// - Lista completa de staff (rota /api/users/staff é protegida por requireRole('OWNER'))
-// - Faturamento agregado
-// - Todos os agendamentos (RLS deixa passar tudo dentro do tenant)
+// Painel do Dono — vê tudo: agenda completa do dia, staff, faturamento,
+// e edita comissão de cada barbeiro via modal CommissionEditor.
 
 import { useEffect, useState } from 'react';
 import { format, isToday, parseISO } from 'date-fns';
@@ -12,6 +8,7 @@ import { Window } from '../components/ui/Window';
 import { Button } from '../components/ui/Button';
 import { formatBRL } from '../lib/format';
 import { useAuth } from '../auth/AuthProvider';
+import { CommissionEditor } from '../components/CommissionEditor';
 
 const API = '/api';
 
@@ -23,30 +20,45 @@ interface Appointment {
   serviceId: string;
   barberId: string;
 }
-interface StaffMember { id: string; name: string; email: string; role: string; }
+interface StaffMember {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  commissionPct: number | null; // basis points (10000 = 100%)
+}
 
 export function OwnerPanel() {
-  const { signOut } = useAuth();
-  const [appts, setAppts] = useState<Appointment[]>([]);
-  const [staff, setStaff] = useState<StaffMember[]>([]);
+  const { signOut, user } = useAuth();
+  const [appts, setAppts]   = useState<Appointment[]>([]);
+  const [staff, setStaff]   = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<StaffMember | null>(null);
 
-  useEffect(() => {
-    Promise.all([
+  async function load() {
+    const [a, s] = await Promise.all([
       fetch(`${API}/appointments`).then(r => r.json()),
       fetch(`${API}/users/staff`).then(r => r.json()),
-    ]).then(([a, s]) => {
-      setAppts(Array.isArray(a) ? a : []);
-      setStaff(Array.isArray(s) ? s : []);
-    }).finally(() => setLoading(false));
+    ]);
+    setAppts(Array.isArray(a) ? a : []);
+    setStaff(Array.isArray(s) ? s : []);
+  }
+
+  useEffect(() => {
+    load().finally(() => setLoading(false));
   }, []);
 
-  // Métricas
   const today       = appts.filter(a => isToday(parseISO(a.startsAt)));
   const completed   = appts.filter(a => a.status === 'COMPLETED');
   const cancelled   = appts.filter(a => a.status === 'CANCELLED');
   const revenue     = completed.reduce((sum, a) => sum + a.priceCents, 0);
   const noShowRate  = appts.length > 0 ? Math.round((cancelled.length / appts.length) * 100) : 0;
+
+  function handleSaved(updated: StaffMember) {
+    setStaff(prev => prev.map(s => s.id === updated.id ? { ...s, ...updated } : s));
+  }
+
+  const canEditCommission = user?.role === 'OWNER';
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#008080] p-4">
@@ -54,7 +66,7 @@ export function OwnerPanel() {
         {loading ? (
           <p className="text-[12px]">Carregando...</p>
         ) : (
-          <div className="grid grid-cols-[1fr_280px] gap-4">
+          <div className="grid grid-cols-[1fr_320px] gap-4">
             {/* Coluna principal: agenda do dia */}
             <section>
               <h3 className="text-[13px] font-bold mb-2">
@@ -62,9 +74,7 @@ export function OwnerPanel() {
                 <span className="text-[11px] text-xp-text/60 ml-2">({today.length})</span>
               </h3>
               {today.length === 0 ? (
-                <p className="text-[11px] text-xp-text/60 py-4 text-center">
-                  Sem agendamentos hoje.
-                </p>
+                <p className="text-[11px] text-xp-text/60 py-4 text-center">Sem agendamentos hoje.</p>
               ) : (
                 <div className="max-h-[420px] overflow-y-auto">
                   <table className="w-full text-[12px] bg-white shadow-xpRaised">
@@ -105,7 +115,6 @@ export function OwnerPanel() {
 
             {/* Sidebar: métricas + staff */}
             <aside className="space-y-3">
-              {/* 4 KPI cards */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-white p-2 shadow-xpRaised">
                   <div className="text-[10px] text-xp-text/60 uppercase">Hoje</div>
@@ -125,27 +134,59 @@ export function OwnerPanel() {
                 </div>
               </div>
 
-              {/* Lista de staff */}
               <div>
                 <h3 className="text-[13px] font-bold mb-2">Equipe ({staff.length})</h3>
-                <div className="max-h-[280px] overflow-y-auto pr-1 space-y-1">
+                <div className="max-h-[300px] overflow-y-auto pr-1 space-y-1">
                   {staff.map(s => (
                     <div key={s.id} className="bg-white p-2 shadow-xpRaised text-[11px]">
-                      <div className="font-bold truncate">{s.name}</div>
-                      <div className="text-xp-text/70 truncate">{s.email}</div>
-                      <div className="text-[10px] uppercase text-xp-sky">{s.role}</div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-bold truncate">{s.name}</div>
+                          <div className="text-xp-text/70 truncate">{s.email}</div>
+                          <div className="text-[10px] uppercase text-xp-sky mt-1">{s.role}</div>
+                          {s.commissionPct !== null && (
+                            <div className="text-[10px] text-xp-text/80 mt-1">
+                              💰 Comissão: <b>{(s.commissionPct / 100).toFixed(2)}%</b>
+                            </div>
+                          )}
+                        </div>
+                        {canEditCommission && s.role === 'BARBER' && (
+                          <button
+                            onClick={() => setEditing({
+                              id: s.id,
+                              initials: s.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase(),
+                              specialty: '',
+                              commissionPct: s.commissionPct ?? 5000,
+                            })}
+                            className="text-[10px] text-xp-sky hover:underline whitespace-nowrap"
+                          >
+                            Editar
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <Button onClick={signOut} className="w-full">
-                Sair
-              </Button>
+              <Button onClick={signOut} className="w-full">Sair</Button>
             </aside>
           </div>
         )}
       </Window>
+
+      <CommissionEditor
+        barber={editing}
+        onClose={() => setEditing(null)}
+        onSaved={(updated) => {
+          // CommissionEditor devolve commissionPct novo; usa o id pra mapear
+          handleSaved({
+            ...staff.find(s => s.id === updated.id)!,
+            commissionPct: updated.commissionPct,
+          });
+          setEditing(null);
+        }}
+      />
     </div>
   );
 }

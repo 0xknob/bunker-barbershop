@@ -43,20 +43,25 @@ export async function userRoutes(app: FastifyInstance) {
         .where(eq(schema.userRoles.tenantId, req.user!.tenantId));
 
       // Enriquece com nome/email via query direta no BA.user
-      const { auth } = await import('../lib/auth');
       const { Pool } = await import('pg');
       const pool = new Pool({ connectionString: process.env.DATABASE_URL });
       const userIds = roles.map(r => r.userId);
-      if (userIds.length === 0) return [];
+      if (userIds.length === 0) { await pool.end(); return []; }
       const result = await pool.query('SELECT id, name, email FROM "user" WHERE id = ANY($1)', [userIds]);
       await pool.end();
 
       const userMap = new Map(result.rows.map(u => [u.id, u]));
+
+      // Enriquece BARBERS com commissionPct (cliente usa pra exibir/editar)
+      const barbers = await txDb.select().from(schema.barbers);
+      const commissionByUserId = new Map(barbers.map(b => [b.userId, b.commissionPct]));
+
       return roles.map(r => ({
-        id:    r.userId,
-        name:  userMap.get(r.userId)?.name ?? '—',
-        email: userMap.get(r.userId)?.email ?? '—',
-        role:  r.role,
+        id:             r.userId,
+        name:           userMap.get(r.userId)?.name ?? '—',
+        email:          userMap.get(r.userId)?.email ?? '—',
+        role:           r.role,
+        commissionPct:  commissionByUserId.get(r.userId) ?? null,
       }));
     });
   });

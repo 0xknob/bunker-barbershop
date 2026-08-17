@@ -31,18 +31,19 @@ export function Window({
 }: WindowProps) {
   return (
     <div
-      style={{ width }}
+      style={{ width, maxHeight: 'calc(100vh - 80px)' }}
       className={cn(
         // Sombra dupla: borda XP elevada + sombra preta pra "flutuar"
-        'shadow-xpRaised',
+        'shadow-xpRaised flex flex-col',
         'border border-xp-chromeShadow/50',
         className,
       )}
     >
       <TitleBar title={title} icon={icon} onClose={onClose} />
 
-      {/* Área interna em "papel" — é onde vai o conteúdo de verdade */}
-      <div className="bg-xp-paper text-xp-text p-4">{children}</div>
+      {/* Área interna em "papel" — flex-1 + overflow pra conteúdo scrollar
+          quando passar da altura da janela */}
+      <div className="bg-xp-paper text-xp-text p-4 flex-1 overflow-y-auto">{children}</div>
     </div>
   );
 }

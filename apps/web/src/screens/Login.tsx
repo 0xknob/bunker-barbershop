@@ -3,7 +3,7 @@
 // Após autenticar, redireciona pro painel certo baseado no role.
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Window } from '../components/ui/Window';
 import { Field } from '../components/ui/Field';
 import { Button } from '../components/ui/Button';
@@ -49,6 +49,12 @@ export function Login() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#008080]">
       <Window title={mode === 'signin' ? 'Entrar — BunkerBarbershop' : 'Criar conta — BunkerBarbershop'}>
+        {/* Link "Voltar pra landing" — sempre visível no topo da janela */}
+        <div className="mb-2 -mt-1">
+          <Link to="/" className="text-[11px] text-xp-sky underline">
+            ← Voltar para a página inicial
+          </Link>
+        </div>
         <form onSubmit={handleSubmit} className="w-[320px]">
           {mode === 'signup' && (
             <Field

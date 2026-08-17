@@ -2,7 +2,7 @@
 // Após signup, redireciona pro painel de CUSTOMER (default).
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Window } from '../components/ui/Window';
 import { Field } from '../components/ui/Field';
 import { Button } from '../components/ui/Button';
@@ -40,6 +40,14 @@ export function Signup() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#008080] p-4 overflow-auto">
       <Window title="Criar conta — BunkerBarbershop" width="min(380px, 92vw)">
+        <div className="mb-2 -mt-1 flex justify-between items-center">
+          <Link to="/" className="text-[11px] text-xp-sky underline">
+            ← Voltar para a página inicial
+          </Link>
+          <Link to="/login" className="text-[11px] text-xp-sky underline">
+            Já tenho conta
+          </Link>
+        </div>
         <form onSubmit={handleSubmit}>
           <Field label="Nome completo" value={name} onChange={(e) => setName(e.target.value)} required maxLength={120} autoFocus />
           <Field

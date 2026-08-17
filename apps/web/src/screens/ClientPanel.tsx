@@ -3,6 +3,7 @@
 // Estilo XP fiel (paper bg, sombras elevadas, títulos em negrito).
 
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Window } from '../components/ui/Window';
 import { Button } from '../components/ui/Button';
 import { formatBRL } from '../lib/format';
@@ -21,6 +22,7 @@ interface Product {
 interface Appointment { id: string; startsAt: string; status: string; serviceId: string; barberId: string; }
 
 export function ClientPanel() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [mine, setMine] = useState<Appointment[]>([]);
@@ -105,7 +107,7 @@ export function ClientPanel() {
                   ))}
                 </div>
               )}
-              <Button variant="primary" className="mt-3 w-full">
+              <Button variant="primary" className="mt-3 w-full" onClick={() => navigate('/booking')}>
                 Agendar atendimento
               </Button>
             </aside>

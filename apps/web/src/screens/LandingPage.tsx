@@ -85,10 +85,10 @@ export function LandingPage() {
             </div>
           )}
 
-          <div className="text-center mt-4">
-            <Link to="/signup">
-              <Button variant="primary">Agendar agora</Button>
-            </Link>
+          <div className="flex gap-3 justify-center mt-4">
+            <Link to="/booking-public"><Button variant="primary">Agendar como visitante</Button></Link>
+            <Link to="/signup"><Button>Criar conta</Button></Link>
+            <Link to="/login"><Button>Já tenho conta</Button></Link>
           </div>
         </section>
 
@@ -142,7 +142,7 @@ export function LandingPage() {
                       {p.currentStock > 0 ? `${p.currentStock} em estoque` : 'Esgotado'}
                     </span>
                   </div>
-                  <Link to="/signup" className="mt-3">
+                  <Link to="/booking-public" className="mt-3">
                     <Button variant="primary" className="w-full" disabled={p.currentStock === 0}>
                       {p.currentStock === 0 ? 'Esgotado' : 'Comprar'}
                     </Button>

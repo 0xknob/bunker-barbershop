@@ -19,7 +19,12 @@ export type AppointmentStatus = (typeof APPOINTMENT_STATUSES)[number];
 export const appointments = pgTable('appointments', {
   id:           text('id').primaryKey(),
   tenantId:     uuid('tenant_id').notNull().references(() => tenants.id),
-  customerId:   text('customer_id').notNull(),         // BA.user.id
+  // customerId é Nullable pra suportar agendamento como visitante
+  // (nesse caso populamos guestName/guestEmail/guestPhone no próprio appointment)
+  customerId:   text('customer_id'),                    // BA.user.id (opcional)
+  guestName:    varchar('guest_name', { length: 120 }),
+  guestEmail:   varchar('guest_email', { length: 255 }),
+  guestPhone:   varchar('guest_phone', { length: 20 }),
   barberId:     text('barber_id').notNull().references(() => barbers.id),
   serviceId:    text('service_id').notNull().references(() => services.id),
   startsAt:     timestamp('starts_at').notNull(),

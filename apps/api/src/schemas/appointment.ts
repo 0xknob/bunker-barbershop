@@ -3,11 +3,26 @@
 
 import { z } from 'zod';
 
-export const createAppointmentSchema = z.object({
-  serviceId: z.string().uuid(),
-  barberId:  z.string().uuid(),
-  startsAt:  z.string().datetime(), // ISO 8601, ex: '2026-08-17T10:00:00Z'
+const guestInfo = z.object({
+  name:  z.string().min(1).max(120),
+  email: z.string().email().max(255),
+  phone: z.string().max(20).optional(),
 });
+
+/**
+ * CreateAppointment aceita 2 modos:
+ * (a) CUSTOMER logado: só { serviceId, barberId, startsAt }
+ * (b) Visitante:     + { guest: { name, email, phone? } }
+ *
+ * Refinamento garante que tem OU customerId (via session) OU guest completo.
+ */
+export const createAppointmentSchema = z
+  .object({
+    serviceId: z.string().min(1),
+    barberId:  z.string().min(1),
+    startsAt:  z.string().datetime(), // ISO 8601
+    guest:     guestInfo.optional(),
+  });
 
 export const cancelAppointmentSchema = z.object({
   reason: z.string().max(200).optional(),

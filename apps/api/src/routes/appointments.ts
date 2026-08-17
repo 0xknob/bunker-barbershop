@@ -2,6 +2,7 @@
 // que mesmo um bug aqui não vaza dados de outros tenants.
 
 import type { FastifyInstance } from 'fastify';
+import { randomUUID } from 'node:crypto';
 import { eq, and, gte, lte, desc } from 'drizzle-orm';
 import { db } from '../db/client';
 import { schema } from '../db/client';
@@ -49,15 +50,29 @@ export async function appointmentRoutes(app: FastifyInstance) {
 
   // ── POST /api/appointments ───────────────────────────────────
   // CUSTOMER cria um appointment pra si mesmo.
+  // POST /api/appointments
+  // 2 modos: CUSTOMER logado OU visitante anônimo (com guest info).
+  // Sem auth obrigatório — visitante pode agendar antes de criar conta.
   app.post('/', async (req, reply) => {
-    if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
     const parsed = createAppointmentSchema.safeParse(req.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: 'ValidationError', issues: parsed.error.issues });
     }
-    const { serviceId, barberId, startsAt } = parsed.data;
+    const { serviceId, barberId, startsAt, guest } = parsed.data;
 
-    return withTenant(req.user.tenantId, async (txDb) => {
+    // Se logado, usa user.id. Se visitante, exige guest.
+    if (!req.user && !guest) {
+      return reply.code(400).send({ error: 'GuestRequired', message: 'Visitante precisa enviar nome+email+telefone.' });
+    }
+
+    // Pega tenant do primeiro tenant ativo (mesmo padrão do /products público)
+    const [tenant] = await db
+      .select({ id: schema.tenants.id })
+      .from(schema.tenants)
+      .limit(1);
+    if (!tenant) return reply.code(500).send({ error: 'NoTenant' });
+
+    return withTenant(tenant.id, async (txDb) => {
       const [service] = await txDb
         .select()
         .from(schema.services)
@@ -65,12 +80,18 @@ export async function appointmentRoutes(app: FastifyInstance) {
         .limit(1);
       if (!service) return reply.code(404).send({ error: 'ServiceNotFound' });
 
+      // Se visitante, criar um user "guest" no BA (ou no nosso schema users)
+      // por simplificação, gravamos os campos direto no appointment
       const startsAtDate = new Date(startsAt);
       const [created] = await txDb
         .insert(schema.appointments)
         .values({
-          tenantId:   req.user!.tenantId,
-          customerId: req.user!.id,
+          id:         randomUUID(),
+          tenantId:   tenant.id,
+          customerId: req.user?.id ?? null,
+          guestName:  guest?.name ?? null,
+          guestEmail: guest?.email ?? null,
+          guestPhone: guest?.phone ?? null,
           barberId,
           serviceId,
           startsAt:   startsAtDate,

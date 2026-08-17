@@ -15,6 +15,13 @@
       "when": 1786929319700,
       "tag": "0001_steady_microchip",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786930656528,
+      "tag": "0002_lying_wilson_fisk",
+      "breakpoints": true
     }
   ]
 }

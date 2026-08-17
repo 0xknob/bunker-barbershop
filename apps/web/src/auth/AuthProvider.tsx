@@ -38,14 +38,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Busca sessão ao montar
   useEffect(() => {
     authClient.getSession()
-      .then((session) => {
+      .then(async (session) => {
         if (session?.data?.user) {
+          // Pega role + tenantId via /api/auth/whoami (lê da nossa tabela user_roles)
+          const res = await fetch('/api/auth/whoami', { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            setUser({
+              id:       data.id,
+              email:    data.email,
+              name:     data.name,
+              tenantId: data.tenantId ?? '',
+              role:     data.role ?? 'CUSTOMER',
+            });
+            return;
+          }
+          // Fallback se whoami falhar — usuário logado mas sem role conhecido
           setUser({
             id:       session.data.user.id,
             email:    session.data.user.email,
             name:     session.data.user.name,
-            tenantId: (session.data.user as { tenantId?: string }).tenantId ?? '',
-            role:     ((session.data.user as { role?: Role }).role ?? 'CUSTOMER'),
+            tenantId: '',
+            role:     'CUSTOMER',
           });
         }
       })
@@ -60,14 +74,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signIn(email: string, password: string) {
     const { error } = await authClient.signIn.email({ email, password });
     if (error) throw new Error(error.message ?? 'Falha no login');
-    const session = await authClient.getSession();
-    if (session.data?.user) {
+    // Pega dados completos (role + tenantId) via /api/auth/whoami
+    const res = await fetch('/api/auth/whoami', { credentials: 'include' });
+    if (res.ok) {
+      const data = await res.json();
       setUser({
-        id: session.data.user.id,
-        email: session.data.user.email,
-        name: session.data.user.name,
-        tenantId: (session.data.user as { tenantId?: string }).tenantId ?? '',
-        role: ((session.data.user as { role?: Role }).role ?? 'CUSTOMER'),
+        id:       data.id,
+        email:    data.email,
+        name:     data.name,
+        tenantId: data.tenantId ?? '',
+        role:     data.role ?? 'CUSTOMER',
       });
     }
   }

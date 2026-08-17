@@ -1,19 +1,18 @@
 // RBAC — papel do usuário dentro de um tenant.
-// PK composta (user_id, tenant_id) permite que o mesmo user tenha papéis
-// diferentes em barbearias diferentes (ex: BARBER na Bunker, CUSTOMER em outra).
-import { pgTable, uuid, varchar, timestamp, primaryKey } from 'drizzle-orm/pg-core';
-import { tenants } from './tenants';
-import { users } from './users';
+// userId é text (não uuid) porque referencia Better-Auth.user.id, que é string
+// gerada pelo BA. tenantId continua uuid (nosso domínio).
+// Vínculo BA.user ↔ nosso users é feito via email em /api/auth/whoami.
 
-// Enum é declarado inline porque Drizzle ainda não tem helper dedicado pro PG enum.
-// Mantemos compatibilidade usando varchar com check via Zod no app.
+import { pgTable, text, uuid, varchar, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import { tenants } from './tenants';
+
 export const ROLES = ['OWNER', 'BARBER', 'CUSTOMER'] as const;
 export type Role = (typeof ROLES)[number];
 
 export const userRoles = pgTable(
   'user_roles',
   {
-    userId:    uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    userId:    text('user_id').notNull(),
     tenantId:  uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
     role:      varchar('role', { length: 20 }).$type<Role>().notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),

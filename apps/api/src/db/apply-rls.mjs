@@ -5,7 +5,7 @@ import fs from 'node:fs';
 const c = new pg.Client({ connectionString: 'postgresql://bunker:bunker@localhost:5432/bunker' });
 await c.connect();
 
-const tables = ['tenants', 'user_roles', 'barbers', 'services', 'appointments', 'schedule_blocks', 'audit_log'];
+const tables = ['tenants', 'user_roles', 'barbers', 'services', 'products', 'appointments', 'schedule_blocks', 'audit_log'];
 for (const t of tables) {
   await c.query('DROP POLICY IF EXISTS tenant_isolation ON ' + t);
 }

@@ -36,6 +36,14 @@ export const auth = betterAuth({
     cookieCache: { enabled: true, maxAge: 60 * 5 },
   },
 
+  // Campos extras no JWT/session além de id/email/name.
+  // `phone` é opcional (não quebramos signups antigos que não tinham).
+  user: {
+    additionalFields: {
+      phone: { type: 'string', required: false },
+    },
+  },
+
   secret: env.JWT_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   trustedOrigins: env.CORS_ORIGINS.split(',').map((o) => o.trim()),

@@ -11,6 +11,7 @@ ALTER TABLE "tenants"         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "user_roles"      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "barbers"         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "services"        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "products"        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "appointments"    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "schedule_blocks" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "audit_log"       ENABLE ROW LEVEL SECURITY;
@@ -31,6 +32,11 @@ CREATE POLICY tenant_isolation ON "barbers"
   WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
 
 CREATE POLICY tenant_isolation ON "services"
+  AS PERMISSIVE FOR ALL TO public
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+CREATE POLICY tenant_isolation ON "products"
   AS PERMISSIVE FOR ALL TO public
   USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
   WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);

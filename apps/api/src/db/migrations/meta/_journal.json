@@ -8,6 +8,13 @@
       "when": 1786927312478,
       "tag": "0000_smart_katie_power",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786929319700,
+      "tag": "0001_steady_microchip",
+      "breakpoints": true
     }
   ]
 }

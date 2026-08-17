@@ -93,6 +93,15 @@ async function seed() {
   const svcCombo = services.find(s => s.name === 'Combo Corte + Barba')!;
   const svcCorte = services.find(s => s.name === 'Corte Clássico')!;
 
+  console.log('🌱 Criando catálogo de produtos...');
+  await db.insert(schema.products).values([
+    { id: randomUUID(), tenantId: tenant.id, sku: 'POM-SUA-120', name: 'Pomada Suavecito Original 4oz', description: 'Pomada clássica americana, hold firme sem brilho.', category: 'pomada', imageUrl: null, retailPriceCents: 7500, costPriceCents: 3500, currentStock: 15, lowStockThreshold: 5, sellOnline: true, isActive: true },
+    { id: randomUUID(), tenantId: tenant.id, sku: 'SHA-CLE-500', name: 'Shampoo Clear Men Anticaspa',    description: 'Shampoo anticaspa 500ml, uso diário.',              category: 'shampoo', imageUrl: null, retailPriceCents: 4500, costPriceCents: 2200, currentStock: 22, lowStockThreshold: 8, sellOnline: true, isActive: true },
+    { id: randomUUID(), tenantId: tenant.id, sku: 'OLE-BAR-30',  name: 'Óleo para Barba Matte',           description: 'Óleo finalizador, acabamento matte sem brilho.',    category: 'oleo',    imageUrl: null, retailPriceCents: 5500, costPriceCents: 2500, currentStock: 3,  lowStockThreshold: 5, sellOnline: true, isActive: true },
+    { id: randomUUID(), tenantId: tenant.id, sku: 'KIT-VIP',     name: 'Kit Viagem Barbeiro',             description: 'Pomada + shampoo + óleo em tamanho travel.',         category: 'kit',     imageUrl: null, retailPriceCents: 12000,costPriceCents: 6000, currentStock: 8,  lowStockThreshold: 3, sellOnline: true, isActive: true },
+    { id: randomUUID(), tenantId: tenant.id, sku: 'NAV-MAQ',     name: 'Navalha de Mão Vintage',           description: 'Navalha clássica importada, couro legítimo.',        category: 'acessorio', imageUrl: null, retailPriceCents: 18000,costPriceCents: 9000, currentStock: 2,  lowStockThreshold: 2, sellOnline: true, isActive: true },
+  ]);
+
   console.log('🌱 Criando agendamentos de exemplo...');
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);

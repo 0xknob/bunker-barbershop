@@ -43,8 +43,9 @@ export function LandingPage() {
           Barbearia clássica com cara de Windows XP
         </p>
         <div className="flex gap-3 justify-center flex-wrap">
-          <Link to="/login"><Button variant="primary">Entrar</Button></Link>
+          <Link to="/booking-public"><Button variant="primary">Agendar como visitante</Button></Link>
           <Link to="/signup"><Button>Cadastrar</Button></Link>
+          <Link to="/login"><Button>Entrar</Button></Link>
         </div>
       </header>
 
@@ -84,12 +85,6 @@ export function LandingPage() {
               ))}
             </div>
           )}
-
-          <div className="flex gap-3 justify-center mt-4">
-            <Link to="/booking-public"><Button variant="primary">Agendar como visitante</Button></Link>
-            <Link to="/signup"><Button>Criar conta</Button></Link>
-            <Link to="/login"><Button>Já tenho conta</Button></Link>
-          </div>
         </section>
 
         {/* ─── PRODUTOS ───────────────────────────────────────────── */}
@@ -223,17 +218,17 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* CTA final */}
+        {/* CTA final — sumário depois do visitante ver tudo */}
         <section className="bg-xp-paper shadow-xpRaised p-6 text-center">
           <h3 className="text-[20px] font-bold mb-2" style={{ fontFamily: 'Trebuchet MS' }}>
             Pronto pra ficar na régua?
           </h3>
           <p className="text-[13px] text-xp-text/70 mb-4">
-            Crie sua conta em 30 segundos ou agende como visitante.
+            Viu o que temos? Agora é com você.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <Link to="/signup"><Button variant="primary">Criar conta</Button></Link>
-            <Link to="/login"><Button>Já tenho conta</Button></Link>
+            <Link to="/booking-public"><Button variant="primary">Agendar agora</Button></Link>
+            <Link to="/signup"><Button>Criar conta</Button></Link>
           </div>
         </section>
       </main>

@@ -19,15 +19,22 @@ import { pool } from './db';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from '../db/schema';
 
+// Callback recebe o db transacional (mesmo tipo que o singleton).
+// O generic do Drizzle conflita com Pool vs PoolClient mas em runtime
+// funciona — usamos `as any` só no cast interno pra não brigar com TS.
+export type TxDb = ReturnType<typeof drizzle<typeof schema>>;
+
 export async function withTenant<T>(
   tenantId: string,
-  fn: (db: ReturnType<typeof drizzle<typeof schema>>) => Promise<T>,
+  fn: (db: TxDb) => Promise<T>,
 ): Promise<T> {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     await client.query('SELECT set_config($1, $2, true)', ['app.tenant_id', tenantId]);
-    const db = drizzle(client, { schema });
+    // Cast interno: client é PoolClient (transação) mas o generic do
+    // drizzle() espera Pool. Em runtime é idêntico.
+    const db = drizzle(client, { schema }) as unknown as TxDb;
     const result = await fn(db);
     await client.query('COMMIT');
     return result;

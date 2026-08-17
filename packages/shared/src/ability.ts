@@ -19,6 +19,8 @@ export type Role = 'OWNER' | 'BARBER' | 'CUSTOMER';
 export function defineAbilityFor(role: Role, opts?: { userId?: string; tenantId?: string }): AppAbility {
   const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
+  const cb = can as any; // workaround: CASL v6 generic narrowing atrapalha TS
+
   if (role === 'OWNER') {
     can('manage', 'all');
   }
@@ -26,12 +28,12 @@ export function defineAbilityFor(role: Role, opts?: { userId?: string; tenantId?
     can(['read', 'create', 'update', 'cancel'], 'Appointment');
     can('read', 'Service');
     can('read', 'Barber');
-    can('update', 'Barber', { userId: opts?.userId });
-    can('read', 'Report', { scope: 'self' });
+    cb('update', 'Barber', { userId: opts?.userId });
+    cb('read', 'Report', { scope: 'self' });
   }
   if (role === 'CUSTOMER') {
     can(['read', 'create'], 'Service');
-    can(['read', 'cancel'], 'Appointment', { customerId: opts?.userId });
+    cb(['read', 'cancel'], 'Appointment', { customerId: opts?.userId });
   }
   return build();
 }

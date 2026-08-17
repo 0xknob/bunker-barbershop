@@ -1,4 +1,4 @@
-# `@bunker/shared`
+# `@barbearia-retro/shared`
 
 Tipos, schemas Zod e regras CASL compartilhadas entre front (`apps/web`) e back (`apps/api`).
 
@@ -12,7 +12,7 @@ Tipos, schemas Zod e regras CASL compartilhadas entre front (`apps/web`) e back 
 ## Uso
 
 ```ts
-import { defineAbilityFor } from '@bunker/shared/ability';
+import { defineAbilityFor } from '@barbearia-retro/shared/ability';
 
 const ability = defineAbilityFor('BARBER', { userId: 'abc', tenantId: 'xyz' });
 if (ability.can('cancel', { __caslSubjectType__: 'Appointment', customerId: 'abc' })) {

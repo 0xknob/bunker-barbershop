@@ -1,5 +1,5 @@
 // Testes das regras de negócio de agendamento (sem dependência de DB).
-// Roda com: pnpm --filter @bunker/api test
+// Roda com: pnpm --filter @barbearia-retro/api test
 //
 // Foca nas funções puras da camada de serviço — sem mock de DB.
 

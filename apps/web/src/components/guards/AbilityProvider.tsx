@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { createMongoAbility } from '@casl/ability';
 import { createContextualCan } from '@casl/react';
-import type { AppAbility } from '@bunker/shared/ability';
+import type { AppAbility } from '@barbearia-retro/shared/ability';
 import { useAuth } from '../../auth/AuthProvider';
 
 const AbilityContext = createContext<AppAbility>(createMongoAbility() as AppAbility);

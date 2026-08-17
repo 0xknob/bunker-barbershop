@@ -17,7 +17,7 @@ importers:
 
   apps/api:
     dependencies:
-      '@bunker/shared':
+      '@barbearia-retro/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@casl/ability':
@@ -75,7 +75,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@bunker/shared':
+      '@barbearia-retro/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@casl/ability':

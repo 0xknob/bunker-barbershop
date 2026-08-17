@@ -1,12 +1,12 @@
 {
   "$schema": "https://vercel.com/schema.json",
-  "buildCommand": "pnpm --filter @bunker/web build",
+  "buildCommand": "pnpm --filter @barbearia-retro/web build",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.bunker.app/api/:path*"
+      "destination": "https://api.barbearia-retro.app/api/:path*"
     }
   ],
   "headers": [

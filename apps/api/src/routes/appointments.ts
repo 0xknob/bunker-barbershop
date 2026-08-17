@@ -22,15 +22,17 @@ export async function appointmentRoutes(app: FastifyInstance) {
   app.get('/', async (req, reply) => {
     const { from, to } = req.query as { from?: string; to?: string };
     if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
+    // Captura o user em const local pra narrowing do TS sobreviver dentro do callback async
+    const user = req.user;
 
-    return withTenant(req.user.tenantId, async (txDb) => {
+    return withTenant(user.tenantId, async (txDb) => {
       const conditions = [];
       if (from) conditions.push(gte(schema.appointments.startsAt, new Date(from)));
       if (to)   conditions.push(lte(schema.appointments.startsAt, new Date(to)));
       // CUSTOMER só vê os próprios
-      const role = (req.user as { role?: string }).role;
+      const role = (user as { role?: string }).role;
       if (role === 'CUSTOMER') {
-        conditions.push(eq(schema.appointments.customerId, req.user.id));
+        conditions.push(eq(schema.appointments.customerId, user.id));
       }
       // BARBER só vê onde ele é o barbeiro
       if (role === 'BARBER') {
@@ -108,10 +110,11 @@ export async function appointmentRoutes(app: FastifyInstance) {
   // Cliente pode cancelar respeitando janela de 24h.
   app.post<{ Params: { id: string } }>('/:id/cancel', async (req, reply) => {
     if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
+    const user = req.user; // const local pra narrowing
     const parsed = cancelAppointmentSchema.safeParse(req.body);
     if (!parsed.success) return reply.code(400).send({ error: 'ValidationError' });
 
-    return withTenant(req.user.tenantId, async (txDb) => {
+    return withTenant(user.tenantId, async (txDb) => {
       const [appt] = await txDb
         .select()
         .from(schema.appointments)
@@ -120,8 +123,8 @@ export async function appointmentRoutes(app: FastifyInstance) {
       if (!appt) return reply.code(404).send({ error: 'AppointmentNotFound' });
 
       // CUSTOMER só pode cancelar o próprio
-      const role = (req.user as { role?: string }).role;
-      if (role === 'CUSTOMER' && appt.customerId !== req.user.id) {
+      const role = (user as { role?: string }).role;
+      if (role === 'CUSTOMER' && appt.customerId !== user.id) {
         return reply.code(403).send({ error: 'Forbidden' });
       }
 
@@ -131,7 +134,7 @@ export async function appointmentRoutes(app: FastifyInstance) {
         .set({
           status:     'CANCELLED',
           cancelledAt: new Date(),
-          cancelledBy: req.user.id,
+          cancelledBy: user.id,
           lateCancel,
           updatedAt:  new Date(),
         })
@@ -140,12 +143,12 @@ export async function appointmentRoutes(app: FastifyInstance) {
 
       // Audit log
       await txDb.insert(schema.auditLog).values({
-        tenantId:  req.user.tenantId,
-        actorId:   req.user.id,
-        action:    'appointment.cancelled',
-        resource:  'appointment',
+        tenantId:   user.tenantId,
+        actorId:    user.id,
+        action:     'appointment.cancelled',
+        resource:   'appointment',
         resourceId: appt.id,
-        payload:   { lateCancel, reason: parsed.data.reason ?? null },
+        payload:    { lateCancel, reason: parsed.data.reason ?? null },
       });
 
       return updated;

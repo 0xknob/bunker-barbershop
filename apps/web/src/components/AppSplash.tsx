@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { BIOSBootScreen } from '../components/screens/BIOSBootScreen';
 
-const SESSION_KEY = 'bunker:boot-seen';
+const SESSION_KEY = 'barbearia-retro:boot-seen';
 
 export function AppSplash({ children }: { children: ReactNode }) {
   const [showBoot, setShowBoot] = useState(() => {

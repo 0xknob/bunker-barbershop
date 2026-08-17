@@ -5,7 +5,7 @@ import { pgTable, text, uuid, varchar, text as textCol, integer, timestamp } fro
 import { tenants } from './tenants';
 
 export const services = pgTable('services', {
-  id:                   text('id').primaryKey(),
+  id:                   text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   tenantId:             uuid('tenant_id').notNull().references(() => tenants.id),
   name:                 varchar('name', { length: 80 }).notNull(),
   description:          textCol('description'),

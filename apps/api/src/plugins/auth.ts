@@ -14,11 +14,14 @@ import { auth } from '../lib/auth';
 
 declare module 'fastify' {
   interface FastifyRequest {
+    // Após requireAuth (preHandler), user é garantido estar setado.
+    // Rotas que usam requireAuth devem fazer narrow c/ if (!req.user) return 401.
     user?: {
       id: string;
       email: string;
       name: string;
       tenantId: string;
+      role?: 'OWNER' | 'BARBER' | 'CUSTOMER';
     };
   }
 }
@@ -30,7 +33,7 @@ export const authPlugin = fastifyPlugin(async (app: FastifyInstance) => {
       `${req.protocol}://${req.hostname}${req.url}`,
       {
         method: req.method,
-        headers: req.headers as HeadersInit,
+        headers: req.headers as unknown as Record<string, string>,
         body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
       },
     );

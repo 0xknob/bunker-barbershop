@@ -39,7 +39,7 @@ export function Signup() {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#008080] p-4 overflow-auto">
-      <Window title="Criar conta — BunkerBarbershop" width="min(380px, 92vw)">
+      <Window title="Criar conta — Barbearia Retro" width="min(380px, 92vw)">
         <div className="mb-2 -mt-1 flex justify-between items-center">
           <Link to="/" className="text-[11px] text-xp-sky underline">
             ← Voltar para a página inicial

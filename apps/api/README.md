@@ -1,6 +1,6 @@
-# `@bunker/api`
+# `@barbearia-retro/api`
 
-Backend Fastify 5 + TypeScript do **BunkerBarbershop**.
+Backend Fastify 5 + TypeScript do **Barbearia Retro**.
 
 ## Stack
 - **Fastify 5** — HTTP server
@@ -129,7 +129,7 @@ node src/db/apply-rls.mjs
 - **Railway**: `railway.toml` na raiz. Aponta pro `apps/api/Dockerfile`.
   - Postgres via Railway plugin → `DATABASE_URL` auto
   - Variáveis manuais: `JWT_SECRET` (openssl rand -base64 32)
-  - Release command: `pnpm --filter @bunker/api db:migrate`
+  - Release command: `pnpm --filter @barbearia-retro/api db:migrate`
 - **Fly.io** / **Render** / **AWS**: mesmo Dockerfile funciona.
 - **Hetzner / VPS**: `node dist/server.js` direto.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@bunker/web",
+  "name": "@barbearia-retro/web",
   "private": true,
   "version": "0.2.0",
   "type": "module",
@@ -13,7 +13,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@bunker/shared": "workspace:*",
+    "@barbearia-retro/shared": "workspace:*",
     "@casl/ability": "^6.7.3",
     "@casl/react": "^5.0.0",
     "better-auth": "^1.2.7",

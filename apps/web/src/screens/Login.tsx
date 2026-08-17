@@ -48,7 +48,7 @@ export function Login() {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#008080]">
-      <Window title={mode === 'signin' ? 'Entrar — BunkerBarbershop' : 'Criar conta — BunkerBarbershop'}>
+      <Window title={mode === 'signin' ? 'Entrar — Barbearia Retro' : 'Criar conta — Barbearia Retro'}>
         {/* Link "Voltar pra landing" — sempre visível no topo da janela */}
         <div className="mb-2 -mt-1">
           <Link to="/" className="text-[11px] text-xp-sky underline">

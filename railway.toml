@@ -16,8 +16,8 @@ restartPolicyMaxRetries = 3
 # Variáveis de ambiente (configurar no painel Railway):
 # - DATABASE_URL: string de conexao do Postgres (Railway provê via plugin)
 # - JWT_SECRET: valor gerado por `openssl rand -base64 32`
-# - CORS_ORIGINS: domínio do front em prod (ex: https://bunker.app)
-# - BETTER_AUTH_URL: URL publica da API (ex: https://api.bunker.app)
+# - CORS_ORIGINS: domínio do front em prod (ex: https://barbearia-retro.app)
+# - BETTER_AUTH_URL: URL publica da API (ex: https://api.barbearia-retro.app)
 
 # IMPORTANTE: rodar migrations na inicialização via release command:
-#   pnpm --filter @bunker/api db:migrate && pnpm --filter @bunker/api db:seed
+#   pnpm --filter @barbearia-retro/api db:migrate && pnpm --filter @barbearia-retro/api db:seed

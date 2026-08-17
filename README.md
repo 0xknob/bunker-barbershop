@@ -1,10 +1,10 @@
-# 🪒 BunkerBarbershop — SaaS de agendamento com UI retrô Windows XP / BIOS
+# 🪒 Barbearia Retro — SaaS de agendamento com UI retrô Windows XP / BIOS
 
 > Barbearia com cara dos anos 2000, RBAC multi-role, defesa em profundidade via Postgres RLS.
 
 ![Status](https://img.shields.io/badge/status-MVP%20v0.3-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![CI](https://img.shields.io/github/actions/workflow/status/0xknob/bunker-barbershop/ci.yml?branch=main&style=flat-square)
+![CI](https://img.shields.io/github/actions/workflow/status/0xknob/barbearia-retro/ci.yml?branch=main&style=flat-square)
 ![Stack](https://img.shields.io/badge/stack-React%2019%20%2B%20TS%20%2B%20Fastify-blue)
 ![Tests](https://img.shields.io/badge/tests-26%20passing-brightgreen)
 ![Node](https://img.shields.io/badge/node-20%2B-brightgreen)
@@ -14,7 +14,7 @@
 
 ## ✨ Proposta
 
-Pequenas barbearias ainda usam caderno, WhatsApp solto ou sistemas genéricos. A **BunkerBarbershop** entrega:
+Pequenas barbearias ainda usam caderno, WhatsApp solto ou sistemas genéricos. A **Barbearia Retro** entrega:
 
 - 🎨 **Identidade visual retrô marcante** (boot estilo BIOS, janelas e botões Windows XP)
 - 🔐 **3 papéis distintos**: `CUSTOMER`, `BARBER`, `OWNER` — cada um vê só o que deve
@@ -27,7 +27,7 @@ Pequenas barbearias ainda usam caderno, WhatsApp solto ou sistemas genéricos. A
 ## 🏗 Arquitetura (v0.2)
 
 ```
-bunker-barbershop/                    ← pnpm + Turborepo monorepo
+barbearia-retro/                    ← pnpm + Turborepo monorepo
 ├── apps/
 │   ├── web/                          ← React 19 + Vite (Vercel)
 │   └── api/                          ← Fastify 5 + TS (Railway)
@@ -78,14 +78,14 @@ pnpm dev
 Abre:
 - **Front:** http://localhost:5173
 - **API:** http://localhost:3001/health
-- **Drizzle Studio:** `pnpm --filter @bunker/api db:studio`
+- **Drizzle Studio:** `pnpm --filter @barbearia-retro/api db:studio`
 
 **Logins de demo** (após seed):
 
 | Role | Email |
 |---|---|
-| OWNER | `rui@bunker.dev` |
-| BARBER | `carlos@bunker.dev` / `tiago@bunker.dev` |
+| OWNER | `rui@barbearia-retro.dev` |
+| BARBER | `carlos@barbearia-retro.dev` / `tiago@barbearia-retro.dev` |
 | CUSTOMER | `cliente@example.com` |
 
 > Senha: definir no signup. Após primeiro login, o seed não cria senhas (Better-Auth usa hash separado).

@@ -15,7 +15,7 @@ interface WelcomeProps {
  */
 export function Welcome({ onBook, onAdmin }: WelcomeProps) {
   return (
-    <Window title="BunkerBarbershop — Bem-vindo!">
+    <Window title="Barbearia Retro — Bem-vindo!">
       <div className="flex gap-4 items-start">
         {/* Ícone grande no estilo "tile" do desktop XP */}
         <div className="shrink-0 w-16 h-16 bg-gradient-to-br from-xp-sky to-xp-skyDark shadow-xpRaised flex items-center justify-center text-[32px]">

@@ -1,6 +1,6 @@
-# `@bunker/web`
+# `@barbearia-retro/web`
 
-Frontend React 19 + Vite do **BunkerBarbershop**.
+Frontend React 19 + Vite do **Barbearia Retro**.
 
 ## Stack
 - **React 19** + **Vite 8**
@@ -98,9 +98,9 @@ vercel --prod
 ```
 
 Ou importar este repo no painel. `vercel.json` na raiz configura:
-- Build: `pnpm --filter @bunker/web build`
+- Build: `pnpm --filter @barbearia-retro/web build`
 - Output: `apps/web/dist`
-- Rewrites: `/api/*` → `https://api.bunker.app/api/*` (configurar via env)
+- Rewrites: `/api/*` → `https://api.barbearia-retro.app/api/*` (configurar via env)
 
 Variáveis de ambiente:
 - `VITE_API_URL` = URL do backend em prod

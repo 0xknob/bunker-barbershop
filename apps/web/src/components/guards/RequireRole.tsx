@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
-import type { Role } from '@bunker/shared';
+import type { Role } from '@barbearia-retro/shared';
 
 interface Props {
   roles: Role[];

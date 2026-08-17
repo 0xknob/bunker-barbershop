@@ -4,7 +4,7 @@ import { pgTable, text, uuid, varchar, jsonb, timestamp } from 'drizzle-orm/pg-c
 import { tenants } from './tenants';
 
 export const auditLog = pgTable('audit_log', {
-  id:        text('id').primaryKey(),
+  id:        text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   tenantId:  uuid('tenant_id').notNull().references(() => tenants.id),
   actorId:   text('actor_id'),
   action:    varchar('action', { length: 60 }).notNull(),

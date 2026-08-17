@@ -2,6 +2,7 @@
 // (até CUSTOMER precisa ver o catálogo). Criação/edição só OWNER.
 
 import type { FastifyInstance } from 'fastify';
+import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { schema } from '../db/client';
@@ -43,12 +44,13 @@ export async function serviceRoutes(app: FastifyInstance) {
         .returning();
       // audit log
       await txDb.insert(schema.auditLog).values({
-        tenantId: req.user!.tenantId,
-        actorId:  req.user!.id,
-        action:   'service.created',
-        resource: 'service',
+        id:         randomUUID(),
+        tenantId:   req.user!.tenantId,
+        actorId:    req.user!.id,
+        action:     'service.created',
+        resource:   'service',
         resourceId: created!.id,
-        payload:  parsed.data,
+        payload:    parsed.data,
       });
       return reply.code(201).send(created);
     });

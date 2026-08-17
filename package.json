@@ -1,8 +1,8 @@
 {
-  "name": "bunker-barbershop",
+  "name": "barbearia-retro",
   "version": "0.2.0",
   "private": true,
-  "description": "BunkerBarbershop v0.2 — monorepo SaaS de barbearia com RBAC e UI retrô.",
+  "description": "Barbearia Retro v0.2 — monorepo SaaS de barbearia com RBAC e UI retrô.",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -11,8 +11,8 @@
     "test": "turbo run test",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "db:migrate": "pnpm --filter @bunker/api db:migrate",
-    "db:seed": "pnpm --filter @bunker/api db:seed"
+    "db:migrate": "pnpm --filter @barbearia-retro/api db:migrate",
+    "db:seed": "pnpm --filter @barbearia-retro/api db:seed"
   },
   "devDependencies": {
     "turbo": "^2.3.3",

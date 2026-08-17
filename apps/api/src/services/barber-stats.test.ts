@@ -1,5 +1,5 @@
 // Testes das funções puras do dashboard do profissional.
-// Roda com: pnpm --filter @bunker/api test
+// Roda com: pnpm --filter @barbearia-retro/api test
 
 import { describe, it, expect } from 'vitest';
 import { computeBarberStats, appointmentsInRange, topServices, formatMinutes } from './barber-stats';

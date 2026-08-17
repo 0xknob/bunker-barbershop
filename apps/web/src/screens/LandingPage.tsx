@@ -37,7 +37,7 @@ export function LandingPage() {
       <header className="bg-gradient-to-b from-xp-sky to-xp-skyDark text-white py-14 px-4 text-center shadow-lg">
         <div className="text-6xl mb-2">✂️</div>
         <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'Trebuchet MS' }}>
-          BunkerBarbershop
+          Barbearia Retro
         </h1>
         <p className="text-lg italic opacity-90 mb-6">
           Barbearia clássica com cara de Windows XP
@@ -93,7 +93,7 @@ export function LandingPage() {
             🛍️ Produtos à venda
           </h2>
           <p className="text-white/80 text-center text-[13px] mb-6">
-            Pomadas, shampoos e óleos — pra você levar o visual bunker pra casa.
+            Pomadas, shampoos e óleos — pra você levar o visual barbearia retro pra casa.
           </p>
 
           {loading ? (
@@ -158,7 +158,7 @@ export function LandingPage() {
             {/* Mapa placeholder (XP-style "antiguidade") */}
             <div className="bg-xp-paper shadow-xpRaised p-1">
               <div className="bg-gradient-to-b from-xp-taskbarLight to-xp-taskbar p-2 text-white text-[11px] font-bold border-b border-xp-skyDark">
-                Mapa — BunkerBarbershop
+                Mapa — Barbearia Retro
               </div>
               <div className="bg-xp-paperDark h-64 flex items-center justify-center relative overflow-hidden">
                 {/* Placeholder de mapa — linhas tipo "ruas" */}
@@ -173,7 +173,7 @@ export function LandingPage() {
                 <div className="relative z-10 bg-white shadow-xpRaised p-2 text-center">
                   <div className="text-[11px] font-bold text-xp-text">📍 Aqui</div>
                   <div className="text-[10px] text-xp-text/70">
-                    BunkerBarbershop
+                    Barbearia Retro
                   </div>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="font-bold w-16 shrink-0">Email</span>
-                  <span>contato@bunker.dev</span>
+                  <span>contato@barbearia-retro.dev</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="font-bold w-16 shrink-0">Horário</span>

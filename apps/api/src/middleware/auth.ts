@@ -11,7 +11,7 @@
 
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { Role } from '../db/schema/user-roles';
-import { defineAbilityFor, type AppAbility } from '../lib/ability';
+import { defineAbilityFor, type AppAbility } from '@barbearia-retro/shared/ability';
 
 declare module 'fastify' {
   interface FastifyRequest {

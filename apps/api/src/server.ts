@@ -1,5 +1,5 @@
 // ──────────────────────────────────────────────────────────────
-//  BunkerBarbershop API
+//  Barbearia Retro API
 //  Fastify + Zod + Drizzle. Porta padrão 3001.
 // ──────────────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ await app.register(authPlugin);
 // ── Health check ─────────────────────────────────────────────
 app.get('/health', async () => ({
   status: 'ok',
-  service: 'bunker-api',
+  service: 'barbearia-retro-api',
   timestamp: new Date().toISOString(),
 }));
 
@@ -54,7 +54,7 @@ await app.register(productRoutes,     { prefix: '/api/products' });
 // ── Start ────────────────────────────────────────────────────
 try {
   await app.listen({ port: env.PORT, host: '0.0.0.0' });
-  app.log.info(`🔒 Bunker API rodando em http://localhost:${env.PORT}`);
+  app.log.info(`🔒 API Barbearia Retro rodando em http://localhost:${env.PORT}`);
 } catch (err) {
   app.log.error(err);
   process.exit(1);

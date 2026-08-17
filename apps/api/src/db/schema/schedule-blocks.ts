@@ -5,7 +5,7 @@ import { tenants } from './tenants';
 import { barbers } from './barbers';
 
 export const scheduleBlocks = pgTable('schedule_blocks', {
-  id:        text('id').primaryKey(),
+  id:        text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   tenantId:  uuid('tenant_id').notNull().references(() => tenants.id),
   barberId:  text('barber_id').notNull().references(() => barbers.id),
   startsAt:  timestamp('starts_at').notNull(),

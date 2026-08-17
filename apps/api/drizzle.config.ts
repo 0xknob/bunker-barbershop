@@ -7,7 +7,7 @@ export default defineConfig({
   out:    './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgresql://bunker:bunker@localhost:5432/bunker',
+    url: process.env.DATABASE_URL ?? 'postgresql://barbearia-retro:barbearia-retro@localhost:5432/bunker',
   },
   verbose: true,
   strict: true,

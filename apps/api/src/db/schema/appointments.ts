@@ -17,7 +17,7 @@ export const APPOINTMENT_STATUSES = [
 export type AppointmentStatus = (typeof APPOINTMENT_STATUSES)[number];
 
 export const appointments = pgTable('appointments', {
-  id:           text('id').primaryKey(),
+  id:           text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   tenantId:     uuid('tenant_id').notNull().references(() => tenants.id),
   // customerId é Nullable pra suportar agendamento como visitante
   // (nesse caso populamos guestName/guestEmail/guestPhone no próprio appointment)

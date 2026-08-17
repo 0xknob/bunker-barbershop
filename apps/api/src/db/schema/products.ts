@@ -17,7 +17,7 @@ import { tenants } from './tenants';
 export const products = pgTable(
   'products',
   {
-    id:                 text('id').primaryKey(),
+    id:                 text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
     tenantId:           uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
     sku:                varchar('sku', { length: 60 }),
     name:               varchar('name', { length: 120 }).notNull(),

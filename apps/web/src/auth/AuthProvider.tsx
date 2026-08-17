@@ -8,7 +8,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { authClient } from './auth-client';
-import { defineAbilityFor, type AppAbility } from '@bunker/shared/ability';
+import { defineAbilityFor, type AppAbility } from '@barbearia-retro/shared/ability';
 
 export type Role = 'OWNER' | 'BARBER' | 'CUSTOMER';
 

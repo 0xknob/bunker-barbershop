@@ -5,7 +5,7 @@
 //   3. Associa cada user ao tenant via user_roles
 //   4. Cria barbers/services/appointments referenciando user_id (text)
 //
-// Senha demo de TODOS os usuários: "bunker1234"
+// Senha demo de TODOS os usuários: "barbearia1234"
 // Nome de cada user = CARGO (não nome pessoal).
 //
 // Uso: pnpm db:seed
@@ -15,13 +15,13 @@ import { db, schema } from './client';
 import { sql } from 'drizzle-orm';
 import { randomUUID } from 'node:crypto';
 
-const DEMO_PASSWORD = 'bunker1234';
+const DEMO_PASSWORD = 'barbearia1234';
 
 const USERS = [
-  { email: 'owner@bunker.dev',     name: 'Dono' },
-  { email: 'barbeiro1@bunker.dev', name: 'Barbeiro 1' },
-  { email: 'barbeiro2@bunker.dev', name: 'Barbeiro 2' },
-  { email: 'cliente@bunker.dev',  name: 'Cliente' },
+  { email: 'owner@barbearia-retro.dev',     name: 'Dono' },
+  { email: 'barbeiro1@barbearia-retro.dev', name: 'Barbeiro 1' },
+  { email: 'barbeiro2@barbearia-retro.dev', name: 'Barbeiro 2' },
+  { email: 'cliente@barbearia-retro.dev',  name: 'Cliente' },
 ] as const;
 
 async function signUpUser(email: string, name: string): Promise<string> {
@@ -37,8 +37,8 @@ async function signUpUser(email: string, name: string): Promise<string> {
     const body = await res.text();
     throw new Error(`signUp falhou pra ${email}: ${res.status} ${body}`);
   }
-  const data = await res.json();
-  return data.user.id as string;
+  const data = await res.json() as { user: { id: string } };
+  return data.user.id;
 }
 
 async function seed() {
@@ -46,10 +46,10 @@ async function seed() {
   // CASCADE remove tudo que depende de tenants/users/BA tables.
   await db.execute(sql`TRUNCATE TABLE tenants, "user", "session", "account", "verification" CASCADE`);
 
-  console.log('🌱 Criando tenant BunkerBarbershop...');
+  console.log('🌱 Criando tenant Barbearia Retro...');
   const [tenant] = await db
     .insert(schema.tenants)
-    .values({ name: 'BunkerBarbershop', slug: 'bunker-barbershop' })
+    .values({ name: 'Barbearia Retro', slug: 'barbearia-retro' })
     .returning();
   if (!tenant) throw new Error('Falha ao criar tenant');
 
@@ -63,18 +63,18 @@ async function seed() {
 
   console.log('🌱 Criando roles (RBAC)...');
   await db.insert(schema.userRoles).values([
-    { userId: userIds['owner@bunker.dev']!,      tenantId: tenant.id, role: 'OWNER' },
-    { userId: userIds['barbeiro1@bunker.dev']!, tenantId: tenant.id, role: 'BARBER' },
-    { userId: userIds['barbeiro2@bunker.dev']!, tenantId: tenant.id, role: 'BARBER' },
-    { userId: userIds['cliente@bunker.dev']!,   tenantId: tenant.id, role: 'CUSTOMER' },
+    { userId: userIds['owner@barbearia-retro.dev']!,      tenantId: tenant.id, role: 'OWNER' },
+    { userId: userIds['barbeiro1@barbearia-retro.dev']!, tenantId: tenant.id, role: 'BARBER' },
+    { userId: userIds['barbeiro2@barbearia-retro.dev']!, tenantId: tenant.id, role: 'BARBER' },
+    { userId: userIds['cliente@barbearia-retro.dev']!,   tenantId: tenant.id, role: 'CUSTOMER' },
   ]);
 
   console.log('🌱 Criando perfis de barbeiro...');
   const [brb1, brb2] = await db
     .insert(schema.barbers)
     .values([
-      { id: randomUUID(), userId: userIds['barbeiro1@bunker.dev']!, tenantId: tenant.id, specialty: 'Cortes clássicos', initials: 'B1', commissionPct: 5000 },
-      { id: randomUUID(), userId: userIds['barbeiro2@bunker.dev']!, tenantId: tenant.id, specialty: 'Barba e pigmentação', initials: 'B2', commissionPct: 4500 },
+      { id: randomUUID(), userId: userIds['barbeiro1@barbearia-retro.dev']!, tenantId: tenant.id, specialty: 'Cortes clássicos', initials: 'B1', commissionPct: 5000 },
+      { id: randomUUID(), userId: userIds['barbeiro2@barbearia-retro.dev']!, tenantId: tenant.id, specialty: 'Barba e pigmentação', initials: 'B2', commissionPct: 4500 },
     ])
     .returning();
   if (!brb1 || !brb2) throw new Error('Falha ao criar barbeiros');
@@ -111,7 +111,7 @@ async function seed() {
     {
       id:         randomUUID(),
       tenantId:   tenant.id,
-      customerId: userIds['cliente@bunker.dev']!,
+      customerId: userIds['cliente@barbearia-retro.dev']!,
       barberId:   brb1.id,
       serviceId:  svcCombo.id,
       startsAt:   tomorrow,
@@ -122,7 +122,7 @@ async function seed() {
     {
       id:         randomUUID(),
       tenantId:   tenant.id,
-      customerId: userIds['cliente@bunker.dev']!,
+      customerId: userIds['cliente@barbearia-retro.dev']!,
       barberId:   brb2.id,
       serviceId:  svcCorte.id,
       startsAt:   new Date(tomorrow.getTime() + 2 * 60 * 60_000),
@@ -134,11 +134,11 @@ async function seed() {
 
   console.log('');
   console.log('✅ Seed concluído!\n');
-  console.log('📧 Logins (senha de todos: bunker1234):');
-  console.log('   OWNER    → owner@bunker.dev');
-  console.log('   BARBER 1 → barbeiro1@bunker.dev');
-  console.log('   BARBER 2 → barbeiro2@bunker.dev');
-  console.log('   CUSTOMER → cliente@bunker.dev');
+  console.log('📧 Logins (senha de todos: barbearia1234):');
+  console.log('   OWNER    → owner@barbearia-retro.dev');
+  console.log('   BARBER 1 → barbeiro1@barbearia-retro.dev');
+  console.log('   BARBER 2 → barbeiro2@barbearia-retro.dev');
+  console.log('   CUSTOMER → cliente@barbearia-retro.dev');
 }
 
 seed()

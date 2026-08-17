@@ -4,7 +4,7 @@ import { pgTable, text, uuid, varchar, integer, timestamp } from 'drizzle-orm/pg
 import { tenants } from './tenants';
 
 export const barbers = pgTable('barbers', {
-  id:              text('id').primaryKey(),
+  id:              text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId:          text('user_id').notNull().unique(),
   tenantId:        uuid('tenant_id').notNull().references(() => tenants.id),
   specialty:       varchar('specialty', { length: 120 }),

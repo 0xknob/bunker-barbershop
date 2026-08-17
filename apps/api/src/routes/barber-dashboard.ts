@@ -19,8 +19,9 @@ export async function barberDashboardRoutes(app: FastifyInstance) {
 
   app.get('/me/dashboard', async (req, reply) => {
     if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
+    const user = req.user;
 
-    return withTenant(req.user.tenantId, async (txDb) => {
+    return withTenant(user.tenantId, async (txDb) => {
       // Acha o profile de barbeiro do user logado (ou passado via ?barberId)
       const { barberId: queryBarberId } = req.query as { barberId?: string };
       const targetBarberId = queryBarberId ?? null;
@@ -28,13 +29,13 @@ export async function barberDashboardRoutes(app: FastifyInstance) {
       let barber;
       if (targetBarberId) {
         // Path OWNER vendo outro barbeiro — exige role OWNER
-        if ((req.user as { role?: string }).role !== 'OWNER') {
+        if ((user as { role?: string }).role !== 'OWNER') {
           return reply.code(403).send({ error: 'Forbidden', message: 'Só OWNER pode ver outros barbeiros' });
         }
         const [b] = await txDb
           .select()
           .from(schema.barbers)
-          .where(and(eq(schema.barbers.id, targetBarberId), eq(schema.barbers.tenantId, req.user.tenantId)))
+          .where(and(eq(schema.barbers.id, targetBarberId), eq(schema.barbers.tenantId, user.tenantId)))
           .limit(1);
         if (!b) return reply.code(404).send({ error: 'BarberNotFound' });
         barber = b;
@@ -43,7 +44,7 @@ export async function barberDashboardRoutes(app: FastifyInstance) {
         const [b] = await txDb
           .select()
           .from(schema.barbers)
-          .where(and(eq(schema.barbers.userId, req.user.id), eq(schema.barbers.tenantId, req.user.tenantId)))
+          .where(and(eq(schema.barbers.userId, user.id), eq(schema.barbers.tenantId, user.tenantId)))
           .limit(1);
         if (!b) return reply.code(404).send({ error: 'NotABarber', message: 'Voce nao tem perfil de barbeiro.' });
         barber = b;

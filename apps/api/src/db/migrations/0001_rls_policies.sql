@@ -1,5 +1,5 @@
 -- ──────────────────────────────────────────────────────────────
---  Postgres Row-Level Security (RLS) — BunkerBarbershop v0.2
+--  Postgres Row-Level Security (RLS) — Barbearia Retro v0.2
 -- ──────────────────────────────────────────────────────────────
 --
 -- Habilita RLS em todas as tabelas de domínio e cria uma policy

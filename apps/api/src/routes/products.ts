@@ -211,9 +211,10 @@ export async function productRoutes(app: FastifyInstance) {
 import { db } from '../db/client';
 import * as schemaModule from '../db/schema';
 import { sql } from 'drizzle-orm';
+import { drizzle as drizzlePg } from 'drizzle-orm/node-postgres';
 
 async function withTenantGlobal<T>(
-  fn: (txDb: ReturnType<typeof drizzle>) => Promise<T>,
+  fn: (txDb: ReturnType<typeof drizzlePg>) => Promise<T>,
 ): Promise<T> {
   // Pega o primeiro tenant — MVP single-tenant
   const [tenant] = await db

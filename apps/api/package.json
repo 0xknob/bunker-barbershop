@@ -1,5 +1,5 @@
 {
-  "name": "@bunker/api",
+  "name": "@barbearia-retro/api",
   "private": true,
   "version": "0.2.0",
   "type": "module",
@@ -18,7 +18,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@bunker/shared": "workspace:*",
+    "@barbearia-retro/shared": "workspace:*",
     "@casl/ability": "^6.7.3",
     "@fastify/cors": "^11.0.0",
     "@fastify/helmet": "^13.0.0",

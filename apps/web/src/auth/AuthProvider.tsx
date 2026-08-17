@@ -25,7 +25,7 @@ interface AuthContextValue {
   ability: AppAbility;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, phone?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -88,8 +88,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function signUp(email: string, password: string, name: string) {
-    const { error } = await authClient.signUp.email({ email, password, name });
+  async function signUp(email: string, password: string, name: string, phone = '') {
+    const { error } = await authClient.signUp.email({
+      email,
+      password,
+      name,
+      // BA additionalFields: exposto no JWT/session se o servidor permitir
+      ...(phone ? { phone } : {}),
+    });
     if (error) throw new Error(error.message ?? 'Falha no cadastro');
     await signIn(email, password);
   }

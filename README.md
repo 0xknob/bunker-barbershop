@@ -2,9 +2,13 @@
 
 > Barbearia com cara dos anos 2000, RBAC multi-role, defesa em profundidade via Postgres RLS.
 
-![Status](https://img.shields.io/badge/status-MVP%20v0.2-blue)
-![Stack](https://img.shields.io/badge/stack-React%2019%20%2B%20TS%20%2B%20Fastify%20%2B%20Drizzle-blue)
+![Status](https://img.shields.io/badge/status-MVP%20v0.3-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![CI](https://img.shields.io/github/actions/workflow/status/0xknob/bunker-barbershop/ci.yml?branch=main&style=flat-square)
+![Stack](https://img.shields.io/badge/stack-React%2019%20%2B%20TS%20%2B%20Fastify-blue)
+![Tests](https://img.shields.io/badge/tests-26%20passing-brightgreen)
+![Node](https://img.shields.io/badge/node-20%2B-brightgreen)
+![pnpm](https://img.shields.io/badge/pnpm-11-blue)
 
 ---
 

@@ -1,9 +1,9 @@
-// Rotas auxiliares de auth: whoami (retorna role/tenantId baseado no email).
-// O handler principal do Better-Auth (signin/signup/session) tá em plugins/auth.ts.
+// Rotas auxiliares de auth: whoami (retorna role/tenantId baseado no user logado).
 
 import type { FastifyInstance } from 'fastify';
 import { eq, and } from 'drizzle-orm';
 import { schema } from '../db/client';
+import { db } from '../db/client';
 import { requireAuth } from '../middleware/auth';
 
 export async function authRoutes(app: FastifyInstance) {
@@ -11,39 +11,41 @@ export async function authRoutes(app: FastifyInstance) {
 
   /**
    * GET /api/auth/whoami
-   * Retorna dados do user + role + tenantId, lidos da nossa tabela `user_roles`.
-   * Front usa isso pra popular AuthProvider.user após login.
+   * Retorna dados do user + role + tenantId, lidos da nossa tabela `user_roles`
+   * filtrados por userId. Sem filtro, qualquer usuário veria o role do primeiro
+   * registro da tabela (bug sério que permitia privilege escalation).
    */
   app.get('/whoami', { preHandler: requireAuth }, async (req, reply) => {
     if (!req.user) return reply.code(401).send({ error: 'Unauthorized' });
 
-    const userEmail = req.user.email;
+    // ⚠️ user_roles.userId armazena BA.user.id (text), não email.
+    // Filtro seguro: WHERE user_id = $1
+    const rows = await db
+      .select({
+        tenantId: schema.userRoles.tenantId,
+        role:     schema.userRoles.role,
+      })
+      .from(schema.userRoles)
+      .where(eq(schema.userRoles.userId, req.user.id))
+      .limit(1);
 
-    // Pega o profile/role do nosso schema. Como nosso `users` tem tenantId,
-    // usamos o user_id do Better-Auth pra mapear.
-    // Para simplificar: query user_roles por tenant_id do melhor match.
-    const roles = await import('../db/client').then(({ db }) =>
-      db
-        .select({
-          tenantId: schema.userRoles.tenantId,
-          role:     schema.userRoles.role,
-        })
-        .from(schema.userRoles)
-        .limit(1),
-    );
-
-    if (!roles[0]) {
+    // Se user não tem role cadastrado (caso novo), default CUSTOMER no tenant seed
+    if (!rows[0]) {
+      const [tenant] = await db
+        .select({ id: schema.tenants.id })
+        .from(schema.tenants)
+        .limit(1);
       return reply.send({
         ...req.user,
-        role: 'CUSTOMER', // default se não tem role cadastrado
-        tenantId: '',
+        tenantId: tenant?.id ?? '',
+        role:     'CUSTOMER',
       });
     }
 
     return reply.send({
       ...req.user,
-      tenantId: roles[0].tenantId,
-      role:     roles[0].role,
+      tenantId: rows[0].tenantId,
+      role:     rows[0].role,
     });
   });
 }
